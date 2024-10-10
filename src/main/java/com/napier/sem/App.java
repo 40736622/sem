@@ -178,7 +178,7 @@ public class App {
             Statement stmt = con.createStatement();
             // Create string for SQL statement
             String strSelect =
-                    "SELECT d.dept_no, d.dept_name, "
+                    "SELECT d.dept_no, d.dept_name "
                             + "FROM departments d "
                             + "WHERE d.dept_name = '" + dept_name + "'";
             // Execute SQL statement
