@@ -93,8 +93,8 @@ public class App {
                 mngr.emp_no = rset.getInt("manager_emp_no");
                 mngr.first_name = rset.getString("manager_fname");
                 mngr.last_name = rset.getString("manager_lname");
-
                 emp.manager = mngr;
+
                 return emp;
             } else {
                 return null;
@@ -178,9 +178,12 @@ public class App {
             Statement stmt = con.createStatement();
             // Create string for SQL statement
             String strSelect =
-                    "SELECT d.dept_no, d.dept_name "
-                            + "FROM departments d "
-                            + "WHERE d.dept_name = '" + dept_name + "'";
+                    "SELECT d.dept_no, d.dept_name, mgr.emp_no, mgr.first_name, mgr.last_name "
+                            + "FROM departments d, dept_manager dm, employees mgr "
+                            + "WHERE d.dept_no = dm.dept_no "
+                            + "AND dm.emp_no = mgr.emp_no "
+                            + "AND dm.to_date = '9999-01-01' "
+                            + "AND d.dept_name = '" + dept_name + "'";
             // Execute SQL statement
             ResultSet rset = stmt.executeQuery(strSelect);
 
@@ -188,9 +191,15 @@ public class App {
             if (rset.next()) {
 
                 Department dept = new Department();
+                Employee mngr = new Employee();
 
-                dept.dept_no = rset.getString("dept_no");
-                dept.dept_name = rset.getString("dept_name");
+                dept.dept_no = rset.getString("d.dept_no");
+                dept.dept_name = rset.getString("d.dept_name");
+
+                mngr.emp_no = rset.getInt("mgr.emp_no");
+                mngr.first_name = rset.getString("mgr.first_name");
+                mngr.last_name = rset.getString("mgr.last_name");
+                dept.manager = mngr;
 
                 return dept;
             } else {
@@ -248,7 +257,6 @@ public class App {
         // Extract employee salary information
 
         Department dept = a.getDepartment("Sales");
-
         //ArrayList<Employee> employees = a.getAllSalaries();
         ArrayList<Employee> employees = a.getSalariesByDepartment(dept);
 
