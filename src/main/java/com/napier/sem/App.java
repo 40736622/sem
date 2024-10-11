@@ -346,17 +346,12 @@ public class App {
         a.connect();
 
         // Extract employee salary information
-        //Department dept = a.getDepartment("Sales");
-        ArrayList<Employee> employees = a.getAllSalariesByRole("Engineer");
-        //ArrayList<Employee> employees = a.getSalariesByDepartment(dept);
+        Department dept = a.getDepartment("Sales");
+        ArrayList<Employee> employees = a.getSalariesByDepartment(dept);
 
         a.printSalaries(employees);
 
-
         // Disconnect from database
         a.disconnect();
-    }
-
-    public void method() {
     }
 }
