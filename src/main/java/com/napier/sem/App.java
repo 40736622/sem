@@ -163,12 +163,17 @@ public class App {
         if (emp != null) {
             System.out.println(
                     emp.emp_no + " "
-                            + emp.first_name + " "
-                            + emp.last_name + "\n"
-                            + emp.title + "\n"
-                            + "Salary:" + emp.salary + "\n"
-                            + emp.dept.dept_name + "\n"
-                            + "Manager: " + emp.manager.first_name + " " + emp.manager.last_name + "\n");
+                            + (emp.first_name != null ? emp.first_name : "N/A") + " "
+                            + (emp.last_name != null ? emp.last_name : "N/A") + "\n"
+                            + (emp.title != null ? emp.title : "N/A") + "\n"
+                            + "Salary: " + emp.salary + "\n"
+                            + (emp.dept != null && emp.dept.dept_name != null ? emp.dept.dept_name : "No Department") + "\n"
+                            + "Manager: "
+                            + (emp.manager != null && emp.manager.first_name != null ? emp.manager.first_name : "N/A") + " "
+                            + (emp.manager != null && emp.manager.last_name != null ? emp.manager.last_name : "N/A") + "\n"
+            );
+        } else {
+            System.out.println("No employee");
         }
     }
 
@@ -251,11 +256,21 @@ public class App {
      *
      * @param employees The list of employees to print.
      */
-    public void printSalaries(ArrayList<Employee> employees) {
+    public void printSalaries(ArrayList<Employee> employees)
+    {
+        // Check employees is not null
+        if (employees == null)
+        {
+            System.out.println("No employees");
+            return;
+        }
         // Print header
         System.out.println(String.format("%-10s %-15s %-20s %-8s", "Emp No", "First Name", "Last Name", "Salary"));
         // Loop over all employees in the list
-        for (Employee emp : employees) {
+        for (Employee emp : employees)
+        {
+            if (emp == null)
+                continue;
             String emp_string =
                     String.format("%-10s %-15s %-20s %-8s",
                             emp.emp_no, emp.first_name, emp.last_name, emp.salary);
