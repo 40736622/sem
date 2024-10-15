@@ -4,7 +4,7 @@
 - License [![LICENSE](https://img.shields.io/github/license/40736622/sem.svg?style=flat-square)](https://github.com/40736622/sem/blob/master/LICENSE)
 - Release [![Releases](https://img.shields.io/github/release/40736622/sem/all.svg?style=flat-square)](https://github.com/40736622/sem/releases)
 
-Each lab builds on delivering a HR System with various DevOp Techniques
+Each lab builds on delivering a HR System with various DevOp Techniques.
 
 **Technologies Used**:
 - Git
