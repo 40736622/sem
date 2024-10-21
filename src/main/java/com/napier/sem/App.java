@@ -56,6 +56,34 @@ public class App {
         }
     }
 
+    public Employee getEmployeeReduced(int ID) {
+        try {
+            Statement stmt = con.createStatement();
+            String strSelect = "SELECT emp_no, first_name, last_name "
+                                + "FROM employees "
+                                + "WHERE emp_no = " + ID;
+            // Execute SQL statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+
+            // Return new employee if valid
+            if (rset.next()) {
+                Employee emp = new Employee();
+
+                emp.emp_no = rset.getInt("emp_no");
+                emp.first_name = rset.getString("first_name");
+                emp.last_name = rset.getString("last_name");
+
+                return emp;
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get employee details");
+            return null;
+        }
+    }
+
     public Employee getEmployee(int ID) {
         try {
             // Create an SQL statement
@@ -354,6 +382,23 @@ public class App {
         }
     }
 
+    public void addEmployee(Employee emp)
+    {
+        try
+        {
+            Statement stmt = con.createStatement();
+            String strUpdate =
+                    "INSERT INTO employees (emp_no, first_name, last_name, birth_date, gender, hire_date) " +
+                            "VALUES (" + emp.emp_no + ", '" + emp.first_name + "', '" + emp.last_name + "', " +
+                            "'9999-01-01', 'M', '9999-01-01')";
+            stmt.execute(strUpdate);
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to add employee");
+        }
+    }
 
     public static void main(String[] args) {
         // Create new Application and connect to database
@@ -367,7 +412,6 @@ public class App {
 
         Department dept = a.getDepartment("Development");
         ArrayList<Employee> employees = a.getSalariesByDepartment(dept);
-
 
         // Print salary report
         a.printSalaries(employees);
