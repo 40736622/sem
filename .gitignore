@@ -36,3 +36,6 @@ buildNumber.properties
 
 # IntelliJ
 .idea/
+
+# Docker reports
+reports/
