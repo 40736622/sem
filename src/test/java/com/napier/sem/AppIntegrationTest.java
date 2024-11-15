@@ -23,10 +23,10 @@ public class AppIntegrationTest
     @Test
     void testGetEmployee()
     {
-        Employee emp = app.getEmployee(255530);
-        assertEquals(emp.emp_no, 255530);
-        assertEquals(emp.first_name, "Ronghao");
-        assertEquals(emp.last_name, "Garigliano");
+        Employee emp = app.getEmployee("255530");
+        assertEquals(255530, emp.emp_no);
+        assertEquals("Ronghao", emp.first_name);
+        assertEquals("Garigliano", emp.last_name);
     }
 
     @Test

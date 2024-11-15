@@ -1,5 +1,11 @@
 package com.napier.sem;
 
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.io.File;
@@ -7,16 +13,18 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
+@SpringBootApplication
+@RestController
 public class App {
     /**
      * Connection to MySQL database.
      */
-    private Connection con = null;
+    private static Connection con = null;
 
     /**
      * Connect to the MySQL database.
      */
-    public void connect(String location, int delay) {
+    public static void connect(String location, int delay) {
         try {
             // Load Database driver
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -49,7 +57,7 @@ public class App {
     /**
      * Disconnect from the MySQL database.
      */
-    public void disconnect() {
+    public static void disconnect() {
         if (con != null) {
             try {
                 // Close connection
@@ -88,7 +96,13 @@ public class App {
         }
     }
 
-    public Employee getEmployee(int ID) {
+    /**
+     * Get a single employee record.
+     * @param ID emp_no of the employee record to get.
+     * @return The record of the employee with emp_no or null if no employee exists.
+     */
+    @RequestMapping("employee")
+    public Employee getEmployee(@RequestParam(value = "id") String ID) {
         try {
             // Create an SQL statement
             Statement stmt = con.createStatement();
@@ -216,6 +230,7 @@ public class App {
      *
      * @return A list of all employees and salaries, or null if there is an error.
      */
+    @RequestMapping("salaries")
     public ArrayList<Employee> getAllSalaries() {
         try {
             // Create an SQL statement
@@ -312,7 +327,8 @@ public class App {
         }
     }
 
-    public Department getDepartment(String dept_name) {
+    @RequestMapping("department")
+    public Department getDepartment(@RequestParam(value = "dept") String dept_name) {
         try {
             // Create an SQL statement
             Statement stmt = con.createStatement();
@@ -352,7 +368,8 @@ public class App {
         }
     }
 
-    public ArrayList<Employee> getSalariesByDepartment(Department dept) {
+    @RequestMapping("salaries_department")
+    public ArrayList<Employee> getSalariesByDepartment(@RequestParam(value = "dept") String dept) {
         try {
             // Create an SQL statement
             Statement stmt = con.createStatement();
@@ -364,7 +381,7 @@ public class App {
                             + "AND employees.emp_no = dept_emp.emp_no "
                             + "AND dept_emp.dept_no = departments.dept_no "
                             + "AND salaries.to_date = '9999-01-01'  "
-                            + "AND departments.dept_no = '" + dept.dept_no + "' "
+                            + "AND departments.dept_name = '" + dept + "' "
                             + "ORDER BY employees.emp_no ASC";
             // Execute SQL statement
             ResultSet rset = stmt.executeQuery(strSelect);
@@ -404,7 +421,8 @@ public class App {
         }
     }
 
-    public ArrayList<Employee> getSalariesByRole(String role) {
+    @RequestMapping("salaries_title")
+    public ArrayList<Employee> getSalariesByTitle(@RequestParam(value = "title") String title) {
         try {
             // Create an SQL statement
             Statement stmt = con.createStatement();
@@ -422,7 +440,7 @@ public class App {
                             + "AND departments.dept_no = dept_emp.dept_no "
                             + "AND dept_manager.dept_no = dept_emp.dept_no "
                             + "AND dept_manager.to_date = '9999-01-01' "
-                            + "AND titles.title = '" + role + "'";
+                            + "AND titles.title = '" + title + "'";
             // Execute SQL statement
             ResultSet rset = stmt.executeQuery(strSelect);
             // Extract employee information
@@ -468,7 +486,7 @@ public class App {
 
         StringBuilder sb = new StringBuilder();
         // Print header
-        sb.append("| Emp No | First Name | Last Name | Title | Salary | Department |                    Manager |\r\n");
+        sb.append("| Emp No | First Name | Last Name | Title | Salary | Department |Manager |\r\n");
         sb.append("| --- | --- | --- | --- | --- | --- | --- |\r\n");
         // Loop over all employees in the list
         for (Employee emp : employees) {
@@ -493,15 +511,11 @@ public class App {
         App app = new App();
 
         if (args.length < 1) {
-            app.connect("localhost:33060", 0);
+            connect("localhost:33060", 0);
         } else {
-            app.connect(args[0], Integer.parseInt(args[1]));
+            connect(args[0], Integer.parseInt(args[1]));
         }
 
-        ArrayList<Employee> employees = app.getSalariesByRole("Manager");
-        app.outputEmployees(employees, "ManagerSalaries.md");
-
-        // Disconnect from database
-        app.disconnect();
+        SpringApplication.run(App.class, args);
     }
 }
