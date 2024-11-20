@@ -1,8 +1,11 @@
 version: '3'
 services:
   # Application Dockerfile is in same folder which is .
+  # Access via http://localhost:8080/employee?id=255530
   app:
     build: .
+    ports:
+      - "8080:8080"
 
   # db is is db folder
   db:
@@ -10,3 +13,13 @@ services:
     restart: always
     ports:
       - "33060:3306"
+
+  # Access via http://localhost/app/employee?id=255530
+  web:
+    build: web/.
+    ports:
+      - "80:80"
+
+  # dummy container so that one exits and actions doesn't keep running
+  dummy:
+    build: dummy/.
