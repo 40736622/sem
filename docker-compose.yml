@@ -19,3 +19,7 @@ services:
     build: web/.
     ports:
       - "80:80"
+
+  # dummy container so that one exits and actions doesn't keep running
+  dummy:
+    build: dummy/.
