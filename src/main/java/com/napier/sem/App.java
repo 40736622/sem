@@ -514,6 +514,7 @@ public class App {
             connect("localhost:33060", 30000);
         } else {
             connect(args[0], Integer.parseInt(args[1]));
+            System.exit(0);
         }
 
         SpringApplication.run(App.class, args);
